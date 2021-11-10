@@ -15,7 +15,10 @@ class TaskController extends Controller
     public function index()
     {
         $tasks = Tasks::select('id','task_title')->get()->toArray();
-        return json_encode($tasks);
+        return response(array(
+            'message' => 'Tasks Fetch Successfully.',
+            'data' => $tasks
+         ), 201);
     }
 
     /**
@@ -29,7 +32,11 @@ class TaskController extends Controller
         $request->validate([
             'task_title' => 'required'
         ]);
-        return Tasks::create($request->all());
+        $task = Tasks::create($request->all());
+        return response(array(
+            'message' => 'Task Successfully Ceated.',
+            'data' => $task
+         ), 201);
     }
 
     /**
@@ -43,9 +50,14 @@ class TaskController extends Controller
         $task = Tasks::find($id);
         if($task){
             $task = Tasks::select('id','task_title')->where('id',$id)->first()->toArray();
-             return json_encode($task);
+            return response(array(
+                'message' => 'Task Successfully Fetch.',
+                'data' => $task
+             ), 201);
         }else{
-            return "Record Not Found";
+            return response(array(
+                'message' => 'Your Requested Task Not Found.',
+             ), 410);
         }
         
     }
@@ -62,9 +74,14 @@ class TaskController extends Controller
         $task = Tasks::find($id);
         if($task){
             $task->update($request->all());
-            return $task;
+            return response(array(
+                'message' => 'Task Successfully Deleted.',
+                'data' => $task
+             ), 201);
         }else{
-            return "Record Not Found";
+            return response(array(
+                'message' => 'Your Requested Task Not Found.',
+             ), 410);
         }
     }
 
@@ -78,9 +95,13 @@ class TaskController extends Controller
     {
         $task = Tasks::find($id);
         if($task){
-            return Tasks::destroy($id);
+            return response(array(
+                'message' => 'Task Successfully Deleted.'
+             ), 201);
         }else{
-            return "Record Not Found";
+            return response(array(
+                'message' => 'Your Requested Task Not Found.',
+             ), 410);
         }
     }
 }

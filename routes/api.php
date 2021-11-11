@@ -5,6 +5,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TodoController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\AuthController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -15,8 +17,16 @@ use App\Http\Controllers\TaskController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::resource('todo', TodoController::class);
-Route::post('login', [LoginController::class,'login']);
-Route::group(['middleware'=>['auth:sanctum']], function () {
-    Route::apiResource('task', TaskController::class);  
+// Route::resource('todo', TodoController::class);
+// Route::post('login', [LoginController::class,'login']);
+// Route::group(['middleware'=>['auth:sanctum']], function () {
+//     Route::apiResource('task', TaskController::class);  
+// });
+
+Route::group([
+    'middleware' => 'api', 'namespaces' => 'App\Http\Controllers'
+], function($router){
+Route::post('login', [AuthController::class,'login']);
+
+    Route::apiResource('task', TaskController::class);
 });
